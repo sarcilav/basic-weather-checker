@@ -32,11 +32,14 @@
   (let [state (mount/start #'env)
         api-key (env :open-weather-key)
         berlin-weather (weather-at "berlin" api-key)
-        geo-weather (weather-at 3.24 -70.0 api-key)]
+        geo-weather (weather-at 3.24 -70.0 api-key)
+        bad-query (weather-at 30000 30000 api-key)]
     (testing "query to get a city weather report"
       (is (= 200 (:cod berlin-weather)))
       (is (= "Berlin" (:name berlin-weather))))
     (testing "query to get lat/lon weather report"
       (is (= 200 (:cod geo-weather)))
       (is (= "Chananané" (:name geo-weather))))
+    (testing "bad query"
+      (is (= 400 (:cod bad-query))))
     (mount/stop #'env)))

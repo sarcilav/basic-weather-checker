@@ -1,6 +1,7 @@
 (ns web-client.open-weather.core
   (:require [clojure.string :as str]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json])
+  (:import (java.net URL)))
 
 (def open-weather-url "http://api.openweathermap.org/data/2.5")
 
@@ -15,10 +16,19 @@
 
 (defn weather-at
   ([queries]
-   (json/read-json (slurp (build-url (base-url "weather") queries))))
+   #dbg
+   (let [url-string (build-url (base-url "weather") queries)
+         url (URL. url-string)
+         conn (. url openConnection)]
+     (with-open [stream (if (= (. conn getResponseCode) 200)
+                          (. conn getInputStream)
+                          (. conn getErrorStream))]
+       (json/read-json (slurp stream)))))
+
   ([city-name api-key]
    (weather-at {"appId" api-key
                 "q" city-name}))
+
   ([lat lon api-key]
    (weather-at {"appId" api-key
                 "lat" lat
