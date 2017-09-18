@@ -9,17 +9,19 @@
   (format "%s/%s" open-weather-url topic))
 
 (defn create-query-string [queries]
-  (map (fn [[k v]] (str k "=" v)) queries))
+  (map (fn [[k v]] (str (name k) "=" (name v))) queries))
 
 (defn build-url [url queries]
   (format "%s?%s" url (str/join "&" (create-query-string queries))))
 
 (defn weather-at
   ([queries]
-   #dbg
    (let [url-string (build-url (base-url "weather") queries)
          url (URL. url-string)
          conn (. url openConnection)]
+     (prn queries)
+     (prn (create-query-string queries))
+     (prn url-string)
      (with-open [stream (if (= (. conn getResponseCode) 200)
                           (. conn getInputStream)
                           (. conn getErrorStream))]

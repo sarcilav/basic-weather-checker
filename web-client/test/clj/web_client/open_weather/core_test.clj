@@ -13,10 +13,12 @@
 (deftest create-query-string-test
   (testing "create-query-string generator is using the proper separators"
     (let [keys ["a" "b" "c" "d"]
+          keys2 [:a :b :c :d]
           queries [1 2 3 4]
           queries2 [1.1 2.2 3.3 4.4]
           expected ["a=1" "b=2" "c=3" "d=4"]
           expected2 ["a=1.1" "b=2.2" "c=3.3" "d=4.4"]]
+      (is (= expected (create-query-string (zipmap keys2 queries))))
       (is (= expected (create-query-string (zipmap keys queries))))
       (is (= expected2 (create-query-string (zipmap keys queries2)))))))
 

@@ -1,8 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
+{% ifequal response.cod 200 %}
+<h1>
+  {{response.name}}
+  <img src="{{ response|weather-icon-url }}"/>
+</h1>
+{% else %}
+<h1>
+  {{response.message}}
+</h1>
+{% endifequal %}
+
 <div class="row">
   <div class="col-sm-12">
-    {{docs|markdown}}
+    <form action="/weather" method="POST">
+      <input id="q" name="q" placeholder="city name" type="text" />
+      {% csrf-field %}
+      <input type="submit" value="Submit" />
+    </form>
   </div>
+  <div class="col-sm-12">
+    <form action="/weather" method="POST">
+      <input id="lat" name="lat" placeholder="lat" type="text" />
+      <input id="lon" name="lon" placeholder="lon" type="text" />
+      {% csrf-field %}
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+      <pre><code>{{ response }}</code></pre>
+    </div>
 </div>
 {% endblock %}
