@@ -28,7 +28,8 @@
       (is (= expected (build-url base query))))))
 
 (deftest weather-at-test
-  (testing "query to get a city weather report"
-    (let [api-key (env :open-weather-key)
-          good-cities '(medellin berlin)]
-      (is (= :some (weather-at (first good-cities) api-key ))))))
+  (let [api-key (env :open-weather-key)]
+    (testing "query to get a city weather report"
+      (is (= :some (weather-at "berlin" api-key))))
+    (testing "query to get lat/lon weather report"
+      (is (= :some (weather-at 3.24 80.0 api-key))))))

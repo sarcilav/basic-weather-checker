@@ -13,5 +13,12 @@
   (format "%s?%s" url (str/join "&" (create-query-string queries))))
 
 (defn weather-at
+  ([queries]
+   (slurp (build-url (base-url "weather") queries)))
   ([city-name api-key]
-   (slurp (build-url (base-url "weather") {"appId" api-key "q" city-name}))))
+   (weather-at {"appId" api-key
+                "q" city-name}))
+  ([lat lon api-key]
+   (weather-at {"appId" api-key
+                "lat" lat
+                "lon" lon})))
