@@ -3,12 +3,15 @@
 
 (def open-weather-url "http://api.openweathermap.org/data/2.5")
 
-(defn base-url [topic api-key]
-  (format "%s/%s?appId=%s" open-weather-url topic api-key))
+(defn base-url [topic]
+  (format "%s/%s" open-weather-url topic))
 
-(defn build-url [url query]
-  (str/join "&" (cons url query)))
+(defn create-query-string [queries]
+  (map (fn [[k v]] (format "%s=%s" k v)) queries))
+
+(defn build-url [url queries]
+  (format "%s?%s" url (str/join "&" (create-query-string queries))))
 
 (defn weather-at
   ([city-name api-key]
-   (slurp (build-url (base-url "weather" api-key) [(str "q=" city-name)]))))
+   (slurp (build-url (base-url "weather") {"appId" api-key "q" city-name}))))
