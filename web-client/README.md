@@ -2,13 +2,18 @@
 
 generated using Luminus version "2.9.11.89"
 
-FIXME
-
 ## Prerequisites
 
 You will need [Leiningen][1] 2.0 or above installed.
 
 [1]: https://github.com/technomancy/leiningen
+
+## Env Vars
+
+In order to work, the system rely on the following env vars
+
+* OPEN_WEATHER_KEY (You can get one at https://home.openweathermap.org/api_keys)
+
 
 ## Running
 
