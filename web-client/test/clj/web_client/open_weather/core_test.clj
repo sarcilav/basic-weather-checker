@@ -4,8 +4,6 @@
             [mount.core :as mount]
             [web-client.config :refer [env]]))
 
-(mount/start)
-
 (deftest base-url-test
   (testing "building the base-url to open weather"
     (let [topic "weather"
@@ -16,8 +14,11 @@
   (testing "create-query-string generator is using the proper separators"
     (let [keys ["a" "b" "c" "d"]
           queries [1 2 3 4]
-          expected ["a=1" "b=2" "c=3" "d=4"]]
-      (is (= expected (create-query-string keys queries))))))
+          queries2 [1.1 2.2 3.3 4.4]
+          expected ["a=1" "b=2" "c=3" "d=4"]
+          expected2 ["a=1.1" "b=2.2" "c=3.3" "d=4.4"]]
+      (is (= expected (create-query-string (zipmap keys queries))))
+      (is (= expected2 (create-query-string (zipmap keys queries2)))))))
 
 (deftest build-url-test
   (testing "build-url that attach the query to end of a base url"
@@ -28,8 +29,10 @@
       (is (= expected (build-url base query))))))
 
 (deftest weather-at-test
-  (let [api-key (env :open-weather-key)]
+  (let [state (mount/start #'env)
+        api-key (env :open-weather-key)]
     (testing "query to get a city weather report"
       (is (= :some (weather-at "berlin" api-key))))
     (testing "query to get lat/lon weather report"
-      (is (= :some (weather-at 3.24 80.0 api-key))))))
+      (is (= :some (weather-at 3.24 80.0 api-key))))
+    (mount/stop #'env)))
